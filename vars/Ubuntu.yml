@@ -1,0 +1,4 @@
+---
+# vars file for jenkins_slave (Ubuntu specific)
+
+jenkins_swarm_client_service_name: jenkins-swarm-client

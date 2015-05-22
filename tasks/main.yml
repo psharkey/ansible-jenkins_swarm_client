@@ -1,2 +1,47 @@
 ---
-# tasks file for jenkins_slave
+# tasks file for jenkins_swarm_client
+
+- name: Include distribution specific variables
+  include_vars: "{{ ansible_distribution }}.yml"
+  tags: jenkins_swarm_client
+
+- include: CentOS.yml
+  when: ansible_distribution == "CentOS"
+  tags: jenkins_swarm_client
+
+- include: Ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+  tags: jenkins_swarm_client
+
+- name: Create Jenkins group
+  group: name=jenkins state=present
+  tags: jenkins_swarm_client
+
+- name: Create Jenkins user
+  user: >
+    name=jenkins
+    group=jenkins
+    state=present
+  tags: jenkins_swarm_client
+
+- name: Create Jenkins swarm client directory
+  file: >
+    path=/opt/jenkins-swarm-client
+    owner=root
+    group=root
+    mode=0755
+    state=directory
+  tags: jenkins_swarm_client
+
+- name: Download Jenkins swarm client
+  get_url: >
+    url=http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/{{ jenkins_swarm_client_version }}/swarm-client-{{ jenkins_swarm_client_version }}-jar-with-dependencies.jar
+    dest=/opt/jenkins-swarm-client/swarm-client-{{ jenkins_swarm_client_version }}-jar-with-dependencies.jar
+  tags: jenkins_swarm_client
+
+- name: Ensure Jenkins swarm client is started and enabled on boot
+  service: >
+    name={{ jenkins_swarm_client_service_name }}
+    state=started
+    enabled=yes
+  tags: jenkins_swarm_client

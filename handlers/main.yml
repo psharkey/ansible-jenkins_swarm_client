@@ -1,2 +1,8 @@
 ---
-# handlers file for jenkins_slave
+# handlers file for jenkins_swarm_client
+
+- name: restart jenkins swarm client
+  service: >
+    name={{ jenkins_swarm_client_service_name }}
+    state=restarted
+  tags: jenkins_swarm_client

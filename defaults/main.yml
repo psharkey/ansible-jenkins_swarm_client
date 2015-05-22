@@ -1,2 +1,13 @@
 ---
-# defaults file for jenkins_slave
+# defaults file for jenkins_swarm_client
+
+jenkins_swarm_client_version: 1.24
+jenkins_swarm_client_auto_discovery_address: 255.255.255.255
+jenkins_swarm_client_description: ''
+jenkins_swarm_client_executors: "{{ ansible_processor_cores }}"
+jenkins_swarm_client_fsroot: /tmp/jenkins
+jenkins_swarm_client_master: ''
+jenkins_swarm_client_labels: []
+jenkins_swarm_client_mode: 'normal'
+jenkins_swarm_client_name: "{{ ansible_hostname }}"
+jenkins_swarm_client_tool_locations: []

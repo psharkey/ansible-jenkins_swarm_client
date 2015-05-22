@@ -1,0 +1,12 @@
+---
+# tasks file for jenkins_swarm_client (Ubuntu specific)
+
+- name: Create Jenkins swarm client upstart script
+  template: >
+    src=jenkins-swarm-client.conf.j2
+    dest=/etc/init/jenkins-swarm-client.conf
+    owner=root
+    group=root
+    mode=0644
+  notify: restart jenkins swarm client
+  tags: jenkins_swarm_client

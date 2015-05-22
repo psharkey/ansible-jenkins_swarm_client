@@ -1,0 +1,33 @@
+# {{ ansible_managed }}
+
+description "Dynamically adds this node as a slave on Jenkins"
+
+start on started networking
+
+stop on runlevel [016]
+
+# respawn the job up to 10 times within a 10 second period.
+# If the job exceeds these values, it will be stopped and
+# marked as failed.
+respawn
+respawn limit 5 10
+
+setgid jenkins
+setuid jenkins
+
+console output
+
+pre-start script
+	logger -is -t "$UPSTART_JOB" "[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Starting"
+end script
+
+script
+	JAVA_CMD="java -jar /opt/jenkins-swarm-client/swarm-client-{{ jenkins_swarm_client_version }}-jar-with-dependencies.jar"
+
+	logger -is -t "$UPSTART_JOB" "[`date -u +%Y-%m-%dT%T.%3NZ`] (executor) executing: $JAVA_CMD"
+  exec $JAVA_CMD -autoDiscoveryAddress '{{ jenkins_swarm_client_auto_discovery_address }}' {% if jenkins_swarm_client_description -%} -description '{{ jenkins_swarm_client_description }}' {% endif -%} -executors '{{ jenkins_swarm_client_executors }}' -fsroot '{{ jenkins_swarm_client_fsroot }}' {% if jenkins_swarm_client_master -%} -master '{{ jenkins_swarm_client_master }}' {% endif -%} {% if jenkins_swarm_client_labels -%} -labels '{{ jenkins_swarm_client_labels|join(' ') }}' {% endif -%} -mode '{{ jenkins_swarm_client_mode }}' -name '{{ jenkins_swarm_client_name }}' {% if jenkins_swarm_client_tool_locations %} -toolLocations {{ jenkins_swarm_client_tool_locations|join(' ') }} {% endif %}
+end script
+
+pre-stop script
+  logger -is -t "$UPSTART_JOB" "[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Stopping"
+end script
