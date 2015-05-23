@@ -1,31 +1,53 @@
-Role Name
-=========
+jenkins_swarm_client
+====================
 
-A brief description of the role goes here.
+Installs and configures Jenkins swarm client
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+This role requires Ansible 1.4 or higher.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+| Name                                          | Default                         | Description                                                                                                                                                                        |
+|-----------------------------------------------|---------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| jenkins_swarm_client_version                  | 1.24                            | Version of Jenkins swarm client to install                                                                                                                                         |
+| jenkins_swarm_client_auto_discovery_address   | 255.255.255.255                 | Use this address for udp-based auto-discovery                                                                                                                                      |
+| jenkins_swarm_client_description              | ''                              | Description to be put on the slave                                                                                                                                                 |
+| jenkins_swarm_client_disable_ssl_verification | false                           | Disable SSL verification in the HttpClient                                                                                                                                         |
+| jenkins_swarm_client_executors                | "{{ ansible_processor_cores }}" | Number of executors                                                                                                                                                                |
+| jenkins_swarm_client_fsroot                   | /tmp/jenkins                    | Directory where Jenkins places files                                                                                                                                               |
+| jenkins_swarm_client_master                   | ''                              | The complete target Jenkins URL. If this option is specified, auto-discovery will be skipped                                                                                       |
+| jenkins_swarm_client_password                 | ''                              | The Jenkins user password                                                                                                                                                          |
+| jenkins_swarm_client_labels                   | []                              | List of labels to be assigned for this slave.                                                                                                                                      |
+| jenkins_swarm_client_mode                     | 'normal'                        | The mode controlling how Jenkins allocates jobs to slaves. Can be either 'normal' (utilize this slave as much as possible) or 'exclusive' (leave this machine for tied jobs only). |
+| jenkins_swarm_client_name                     | "{{ ansible_hostname }}"        | Name of the slave                                                                                                                                                                  |
+| jenkins_swarm_client_tool_locations           | []                              | List of tool locations to be defined on this slave. A tool location is specified as 'toolName:location'                                                                            |
+| jenkins_swarm_client_username                 | ''                              | The Jenkins username for authentication                                                                                                                                            |
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+- kbrebanov.java (OpenJDK 7)
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Install Jenkins swarm client
+```
+- hosts: all
+  roles:
+    - { role: kbrebanov.jenkins_swarm_client }
+```
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+Install Jenkins swarm client and specify master server
+```
+- hosts: all
+  roles:
+    - { role: kbrebanov.jenkins_swarm_client, jenkins_swarm_client_master: 'http://jenkins:8080/' }
+```
 
 License
 -------
@@ -35,4 +57,4 @@ BSD
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Kevin Brebanov
