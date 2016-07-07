@@ -55,3 +55,26 @@ SSH password:
 }
 root@ff0d2da7190d:~/github/psharkey/ansible-jenkins_swarm_client#
 ```
+
+## Playbook Example
+
+The following shows a simple playbook (nginx.yml) example which installs NGINX on the remote server:
+
+```bash
+root@ff0d2da7190d:~/github/psharkey/ansible-jenkins_swarm_client# docker run --rm -it -w=$(pwd) --volumes-from github ansible-jenkins-swarm-slave-driver ansible-playbook -i hosts --ask-pass --ask-sudo-pass -u psharkey -s nginx.yml
+SSH password:
+SUDO password[defaults to SSH password]:
+
+PLAY ***************************************************************************
+
+TASK [setup] *******************************************************************
+ok: [10.10.101.113]
+
+TASK [Install Nginx] ***********************************************************
+changed: [10.10.101.113]
+
+PLAY RECAP *********************************************************************
+10.10.101.113              : ok=2    changed=1    unreachable=0    failed=0
+
+root@ff0d2da7190d:~/github/psharkey/ansible-jenkins_swarm_client#
+```
